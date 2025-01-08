@@ -1,9 +1,18 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
+EXPECTED = os.environ.get('API_KEY')
+
 @app.route('/trigger', methods=['POST'])
 def trigger():
+    
+    auth = request.headers.get('Authorization')
+    
+    if not auth or auth != f"Bearer {EXPECTED}":
+        return jsonify({"message": "Unauthorized", "status": 401}), 401
+    
     # Get the email body from the incoming JSON request
     data = request.get_json()  # This will parse the JSON body into a Python dictionary
     
