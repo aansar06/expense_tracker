@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import os
+import add_single_expense
 
 app = Flask(__name__)
 
@@ -18,7 +19,7 @@ def trigger():
     
     if data and 'email_body' in data:
         email_text = data['email_body']
-        print("Received email content: ", email_text)
+       
         # Call your main program logic with the email text if needed
         your_program_logic(email_text)
         return jsonify({"message": "Triggered successfully", "status": 200}), 200
@@ -28,7 +29,8 @@ def trigger():
 def your_program_logic(email_text):
     # Here you can process the email_text as needed
     print("Running your program logic with the email content:")
-    print(email_text)  # Process or manipulate email text as needed
+    # Process or manipulate email text as needed
+    add_single_expense.parse_email(email_text)
 
 if __name__ == '__main__':
     app.run(port=5000)  # Runs the server on http://localhost:5000
