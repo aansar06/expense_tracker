@@ -1,4 +1,4 @@
-import expense_tracker.expenses_bank as expenses_bank
+import expenses_bank
 import gspread
 import time
 def get_amount(email_text):
