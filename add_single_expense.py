@@ -74,10 +74,10 @@ def parse_email(email_text):
         month_number = int(date.split("/")[0])
         temp_month = expenses_bank.months[month_number-1]
         if(name == 'Zaki Ansari' and amount == '-30.00'):
-            expenses_bank.add_expense_to_category("Phone Bill", date, f"Zelle Payment to {name.split(" ")[0]}", amount, temp_month)
+            expenses_bank.add_expense_to_category("Phone Bill", date, f"Zelle Payment to {name.split(' ')[0]}", amount, temp_month)
             add_expense_to_sheet(date, name, amount, "Phone Bill", month_number)
         elif(name == 'Jawad Ansari' or name == 'Zaki Ansari'):
-            expenses_bank.add_expense_to_category("Personal Expenses", date, f"Zelle Payment to {name.split(" ")[0]}", amount, temp_month)
+            expenses_bank.add_expense_to_category("Personal Expenses", date, f"Zelle Payment to {name.split(' ')[0]}", amount, temp_month)
             add_expense_to_sheet(date, name, amount, "Personal Expenses", month_number)
         else:
             expenses_bank.add_expense_to_category("807 Wifi", date, f"Zelle Payment to {name}", amount, temp_month)
