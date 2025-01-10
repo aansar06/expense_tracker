@@ -70,8 +70,6 @@ def add_expense_to_category(category, date, name, amount, tmonth):
 
 sa = gspread.service_account()
 sh = sa.open("Personal Finances(2024-25)")
-wks = sh.worksheet("january")
-rows = 8
 with open(file, mode = 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     next(csv_reader)

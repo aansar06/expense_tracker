@@ -1,6 +1,19 @@
 import expenses_bank
 import gspread
 import time
+import json
+import os
+
+def get_wks(month):
+    service_account_data = os.getenv('SERVICE_ACCOUNT_JSON')
+    with open("/tmp/service_account.json", "w") as f:
+        f.write(service_account_data)
+    sa = gspread.service_account(filename="/tmp/service_account.json")
+    sh = sa.open("Personal Finances(2024-25)")
+    wks = sh.worksheet(expenses_bank.month_names[month-1])
+    return wks
+
+
 def get_amount(email_text):
     dollar_index  = email_text.find("$")
     amount = ('-'+email_text[dollar_index+1:dollar_index+6])
@@ -31,9 +44,8 @@ def get_date(email_text):
 
 
 def add_expense_to_sheet(date, name, amount, category, mnth):
-    sa = gspread.service_account()
-    sh = sa.open("Personal Finances(2024-25)")
-    wks = sh.worksheet(expenses_bank.month_names[mnth-1])
+    wks = get_wks()
+    
 
     # Search for the word "gain" in the first column starting from row 8
     word_to_search = category
