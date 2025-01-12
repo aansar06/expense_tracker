@@ -1,8 +1,7 @@
 import expenses_bank
 import gspread
 import time
-import json
-import os
+
 
 def get_wks(month):
     sa = gspread.service_account()
