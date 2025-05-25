@@ -68,7 +68,7 @@ def add_expense_to_category(category, date, name, amount, tmonth):
     tmonth[category].append([date, name, amount])
 
 
-sa = gspread.service_account()
+sa = gspread.service_account(filename="credentials/service_account.json")
 sh = sa.open("Personal Finances(2024-25)")
 with open(file, mode = 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
