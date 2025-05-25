@@ -4,7 +4,7 @@ import time
 
 
 def get_wks(month):
-    sa = gspread.service_account()
+    sa = gspread.service_account(filename="credentials/service_account.json")
     sh = sa.open("Personal Finances(2024-25)")
     wks = sh.worksheet(expenses_bank.month_names[month-1])
     return wks
