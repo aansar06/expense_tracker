@@ -33,4 +33,5 @@ def your_program_logic(email_text):
     add_single_expense.parse_email(email_text)
 
 if __name__ == '__main__':
-    app.run(port=5000)  # Runs the server on http://localhost:5000
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
