@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import os
 import add_single_expense
-ee
+#ee
 app = Flask(__name__)
 
 EXPECTED = os.environ.get('API_KEY')
@@ -30,7 +30,12 @@ def your_program_logic(email_text):
     # Here you can process the email_text as needed
     print("Running your program logic with the email content:")
     # Process or manipulate email text as needed
-    add_single_expense.parse_email(email_text)
+    success = add_single_expense.parse_email(email_text)
+    if not success:
+        app.logger.warning("Email parsing failed or email did not match expected format.")
+    else:
+        app.logger.info("Email parsed and expense added successfully.")
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

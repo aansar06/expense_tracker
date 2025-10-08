@@ -90,6 +90,8 @@ def parse_email(email_text):
         else:
             expenses_bank.add_expense_to_category("807 Wifi", date, f"Zelle Payment to {name}", amount, temp_month)
             add_expense_to_sheet(date, name, amount, "807 Wifi", month_number)
+    else:
+        return False
 
 
     
