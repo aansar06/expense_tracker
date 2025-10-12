@@ -11,31 +11,66 @@ def get_wks(month):
 
 
 def get_amount(email_text):
-    dollar_index  = email_text.find("$")
-    amount = ('-'+email_text[dollar_index+1:dollar_index+6])
-    return amount
+    '''
+    O(1) time for start_ind since "$" is always at the same place
+    O(a) time for end_ind where a is the length of the amount(i.e; 14.00 has length = 5) since we are iterating through each character until we find a space
+    O(a) for slicing the string to get the amount
+    Overall O(1+a+a) = O(a) time complexity where a is the length of the amount
+    
+    * Runtime is near O(1) since 'a' only differs by a couple characters in length (max length of amount can be 7-8)
+
+    '''
+    # start_ind is the index of the first character of the amount
+    start_ind = email_text.find("$")+1
+    end_ind = start_ind
+    # iterating through each character until we find a space
+    while email_text[end_ind] != " ":
+        end_ind += 1 # end_ind is the index of the last character after the amount
+
+    # slicing the string to get the amount
+    return email_text[start_ind:end_ind]
+
+    
 
 def get_name(email_text):
-    start_index = email_text.find("You sent a payment to ")+22
-    end_index = email_text.find('\n', start_index)
-    name = email_text[start_index:end_index]
-    return name
+    '''
+    O(1) time for start_ind since "with " is always at the same place
+    O(m) time for end_ind where m is the length of the name since .find() starts from start_ind(beginning of name)
+    O(m) for slicing the string to get the name
+    Overall O(1+m+m) = O(m) time complexity where m is the length of the name
+
+    '''
+    # start_ind is the index of the first character of the name
+    start_ind_n = email_text.find("with ")+5
+    # end_ind is the index of the last character after the name
+    end_ind_n = email_text.find("Account", start_ind_n)
+    # slicing the string to get the name
+    return email_text[start_ind_n:end_ind_n]
 
 def get_date(email_text):
-    start_index = email_text.find("Sent on ")+8
-    end_index = email_text.find("\n", start_index)
-    #getting date in the form of Month Day, Year
-    date = email_text[start_index:end_index]
+    '''
+    O(c) time for start_index where c is the number of characters before "Made on "
+    O(1) time for month, day, year since they are always at the same place after start_index
+      - months_map is a dictionary so getting the month number is O(1) ammortized
+    Overall O(1+c) = O(c) time complexity where m is the number of characters before "Made on "
+
+    * Runtime is near O(1) since 'm' is roughly the same in practical cases
+
+    '''
+    # start_index is the index of the first character of the month
+    start_index = email_text.find("Made on ")+8
+
+    # getting month, day, year
+    month = email_text[start_index:start_index+3]
+    day = email_text[start_index+4:start_index+6]
+    year = email_text[start_index+8:start_index+12]
     
-    #converting date to the form of MM/DD/YYYY
-    date.split(" ")
-    for month in expenses_bank.month_names:
-        if(date[0].lower() == month[:3]):
-            month_number = f"{expenses_bank.month_names.index(month) + 1:02}"
-            break
-    day = date[1].replace(",", "")
-    year = date[2]
+    # using dictionary to get month number: O(1) ammortized time
+    month_number = expenses_bank.months_map[month]
+
+    # formatting date as MM/DD/YYYY
     date = f"{month_number}/{day}/{year}"
+
     return date
 
 

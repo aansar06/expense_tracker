@@ -20,9 +20,15 @@ def trigger():
     if data and 'email_body' in data:
         email_text = data['email_body']
        
+        # testing if parsing works
+        
         # Call your main program logic with the email text if needed
         your_program_logic(email_text)
-        return jsonify({"message": "Triggered successfully", "status": 200}), 200
+        return jsonify({
+            
+            "message": "Triggered successfully", 
+            "status": 200
+        }), 200
     else:
         return jsonify({"message": "No email body found", "status": 400}), 400
 
