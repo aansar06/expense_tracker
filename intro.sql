@@ -11,4 +11,7 @@
 -- ('cardio', 'cycling'),
 -- ('flexibility', 'yoga'),
 -- ('flexibility', 'stretching') ;
-SELECT * FROM training;
+
+SELECT * FROM backup_data LIMIT 25;
+
+-- DROP TABLE training;

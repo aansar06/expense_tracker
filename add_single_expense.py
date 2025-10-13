@@ -1,7 +1,15 @@
 import expenses_bank
 import gspread
 import time
+import joblib
+import pandas as pd
+import sqlite3
+import subprocess
 
+
+def retrain_model():
+    subprocess.run(["python", "retraining_model.py"], check=True)
+    print("✅ Model retrained with new data")
 
 def get_wks(month):
     sa = gspread.service_account(filename="credentials/service_account.json")
@@ -73,6 +81,58 @@ def get_date(email_text):
 
     return date
 
+def get_category(name):
+    # loading the trained model
+    model = joblib.load("merchant_model.pkl")
+
+    # preprocessing the name
+    name = name.lower().strip()
+
+    # predicting the category
+    X_new = pd.Series([name])
+    predicted_category = model.predict(X_new)[0] 
+
+    # getting confidence
+    proba = model.predict_proba(X_new)
+    confidence = proba.max() 
+
+    if(confidence < 0.6):
+        # check if name is in backup database
+        conn = sqlite3.connect('intro.db')
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT merchant_category
+            FROM backup_data
+            WHERE LOWER(?) LIKE '%' || LOWER(merchant) || '%' LIMIT 1 """, (name,)
+        )
+
+        # get the name of the category
+        row = cursor.fetchone()
+        if row:
+            predicted_category = row[0]
+            cursor.execute(""" 
+                INSERT INTO training_dataset (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+            cursor.execute(""" 
+                INSERT INTO training_dataset (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+            conn.commit()
+            # retrain the model
+            retrain_model()
+        else:
+            predicted_category = "Other"
+            cursor.execute(""" 
+                INSERT INTO corrections (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+
+    return predicted_category
+
 
 def add_expense_to_sheet(date, name, amount, category, mnth):
     wks = get_wks(mnth)
@@ -110,7 +170,7 @@ def add_expense_to_sheet(date, name, amount, category, mnth):
             # if the next cell is not empty, do nothing
             
 def parse_email(email_text):
-    if("You sent a Zelle® payment" in email_text):
+    '''if("You sent a Zelle® payment" in email_text):
         amount = get_amount(email_text)
         name = get_name(email_text)
         date = get_date(email_text)
@@ -126,7 +186,12 @@ def parse_email(email_text):
             expenses_bank.add_expense_to_category("807 Wifi", date, f"Zelle Payment to {name}", amount, temp_month)
             add_expense_to_sheet(date, name, amount, "807 Wifi", month_number)
     else:
-        return False
+        return False'''
+    name = get_name(email_text)
+    amount = get_amount(email_text)
+    date = get_date(email_text)
+    category = get_category(name)
+
 
 
     
