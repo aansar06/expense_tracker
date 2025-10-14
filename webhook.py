@@ -25,7 +25,7 @@ def trigger():
         # Call your main program logic with the email text if needed
         your_program_logic(email_text)
         return jsonify({
-            
+
             "message": "Triggered successfully", 
             "status": 200
         }), 200

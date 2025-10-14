@@ -123,6 +123,7 @@ def get_category(name):
                 """, (predicted_category, name)
             )
             conn.commit()
+            conn.close()
             # retrain the model
             retrain_model()
         else:
