@@ -1,4 +1,4 @@
-import re
+"""import re
 import csv
 import gspread
 import time
@@ -16,20 +16,6 @@ October = {}
 November = {}
 December = {}
 months = [January, February, March, April, May, June, July, August, September, October, November, December]
-months_map = {
-    "Jan": "01",
-    "Feb": "02",
-    "Mar": "03",
-    "Apr": "04",
-    "May": "05",
-    "Jun": "06",
-    "Jul": "07",
-    "Aug": "08",
-    "Sep": "09",
-    "Oct": "10",
-    "Nov": "11",
-    "Dec": "12"
-}
 grocery_stores = ["A & P FOOD STORES", "ALBERTSONS", "ALDI", "ARMANDO'S SUPERMARKET", "AUSTIN FOODS", 
 "BASIC AMERICAN FOODS", "BERNER FOODS INCORPORATED", "BUNGE FOODS", "BUTERA FINER FOODS", "C TOWN", 
 "CERTIFIED GROCERS OF III", "COSTCO", "COUNTY MARKET", "CUB FOODS", "DAVE'S SUPERMARKET", "DEAN FOODS", 
@@ -190,3 +176,18 @@ for dict in months:
         
         print_expense(loss)
     month+=1
+"""
+months_map = {
+    "Jan": "01",
+    "Feb": "02",
+    "Mar": "03",
+    "Apr": "04",
+    "May": "05",
+    "Jun": "06",
+    "Jul": "07",
+    "Aug": "08",
+    "Sep": "09",
+    "Oct": "10",
+    "Nov": "11",
+    "Dec": "12"
+}
