@@ -99,41 +99,43 @@ def get_category(name):
     proba = model.predict_proba(X_new)
     confidence = proba.max() 
 
-    # if(confidence < 0.6):
-    #     # check if name is in backup database
-    #     conn = sqlite3.connect('intro.db')
-    #     cursor = conn.cursor()
-    #     cursor.execute("""
-    #         SELECT merchant_category
-    #         FROM backup_data
-    #         WHERE LOWER(?) LIKE '%' || LOWER(merchant) || '%' LIMIT 1 """, (name,)
-    #     )
+    if(confidence < 0.6):
+        # check if name is in backup database
+        conn = sqlite3.connect('intro.db')
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT merchant_category
+            FROM backup_data
+            WHERE LOWER(?) LIKE '%' || LOWER(merchant) || '%' LIMIT 1 """, (name,)
+        )
 
-    #     # get the name of the category
-    #     row = cursor.fetchone()
-    #     if row:
-    #         predicted_category = row[0]
-    #         cursor.execute(""" 
-    #             INSERT INTO training_dataset (merchant_category, merchant)
-    #             VALUES (?, ?) 
-    #             """, (predicted_category, name)
-    #         )
-    #         cursor.execute(""" 
-    #             INSERT INTO training_dataset (merchant_category, merchant)
-    #             VALUES (?, ?) 
-    #             """, (predicted_category, name)
-    #         )
-    #         conn.commit()
-    #         conn.close()
-    #         # retrain the model
-    #         #retrain_model()
-    #     else:
-    #         predicted_category = "Other"
-    #         cursor.execute(""" 
-    #             INSERT INTO corrections (merchant_category, merchant)
-    #             VALUES (?, ?) 
-    #             """, (predicted_category, name)
-    #         )
+        # get the name of the category
+        row = cursor.fetchone()
+        if row:
+            predicted_category = row[0]
+            cursor.execute(""" 
+                INSERT INTO training_dataset (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+            cursor.execute(""" 
+                INSERT INTO training_dataset (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+            conn.commit()
+            
+            # retrain the model
+            #retrain_model()
+        else:
+            predicted_category = "Other"
+            cursor.execute(""" 
+                INSERT INTO corrections (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+            conn.commit()
+        conn.close()
 
     return predicted_category
 
