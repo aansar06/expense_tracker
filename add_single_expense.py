@@ -19,7 +19,7 @@ def get_wks(date_str):
     sh = sa.open("Personal Finances(2024-25)")
     dt = datetime.strptime(date_str, "%m/%d/%Y")
     month_name = dt.strftime("%B")
-    wks = sh.worksheet(month_name)
+    wks = sh.worksheet(month_name.lower())
     return wks
 
 
