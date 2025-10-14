@@ -5,16 +5,19 @@ import joblib
 import pandas as pd
 import sqlite3
 import subprocess
+from datetime import datetime
 
 
 def retrain_model():
     subprocess.run(["python", "retraining_model.py"], check=True)
     print("✅ Model retrained with new data")
 
-def get_wks(month):
+def get_wks(date_str):
     sa = gspread.service_account(filename="credentials/service_account.json")
     sh = sa.open("Personal Finances(2024-25)")
-    wks = sh.worksheet(expenses_bank.month_names[month-1])
+    dt = datetime.strptime(date_str, "%m/%d/%Y")
+    month_name = dt.strftime("%B")
+    wks = sh.worksheet(month_name)
     return wks
 
 
@@ -134,63 +137,47 @@ def get_category(name):
     return predicted_category
 
 
-def add_expense_to_sheet(date, name, amount, category, mnth):
-    wks = get_wks(mnth)
-    
-
-    # Search for the word "gain" in the first column starting from row 8
+def add_expense_to_sheet(date, name, amount, category):
+    """
+    Adds an expense entry to the given month's worksheet.
+    If the category exists, inserts the expense below it.
+    If not, creates the category and inserts it at the end.
+    """
+    wks = get_wks(date)
+    category = category.strip()
     word_to_search = category
-    for row in range(8, wks.row_count + 1):
-        #getting the value of the cell in column 1
-        cell_value = wks.cell(row, 1).value
-        
-        #if the cell is not empty
-        if cell_value:
-            #if the word is found in the cell
-            if(word_to_search in cell_value):
-                # insert expense in 'next cell'
-                wks.insert_row([date, name, amount], row+1)
-                time.sleep(2)
-                break
-            else:
-                continue
-        
-        #if the cell is empty
-        else:
-            #if the 'next cell' is empty
-            if not wks.cell(row+1, 1).value:
-                # insert name of category in 'next cell'
-                wks.update_cell(row+1, 1, word_to_search)
-                time.sleep(2)
-                # insert expense in 'next next cell'
-                wks.insert_row([date, name, amount], row+2)
-                time.sleep(2)
-                break
-            
-            # if the next cell is not empty, do nothing
+
+    # Get all values in the first column starting from row 8
+    category_col = wks.col_values(1)[7:]  # zero-indexed, so skip first 7 rows
+    base_row = 8  # actual first row in the sheet to start looking
+
+    found_row = None
+
+    # Search for category name
+    for i, cell_value in enumerate(category_col, start=base_row):
+        if cell_value and word_to_search.lower() in cell_value.lower():
+            found_row = i
+            break
+
+    if found_row:
+        # Insert expense just below the category
+        insert_row = found_row + 1
+        wks.insert_row([date, name, amount], insert_row)
+        print(f"✅ Added expense under existing category '{category}' at row {insert_row}.")
+    else:
+        # Append new category and expense at the end
+        last_row = len(category_col) + base_row
+        wks.update_cell(last_row + 1, 1, word_to_search)
+        wks.insert_row([date, name, amount], last_row + 2)
+        print(f"🆕 Created new category '{category}' and added expense below it.")
+
             
 def parse_email(email_text):
-    '''if("You sent a Zelle® payment" in email_text):
-        amount = get_amount(email_text)
-        name = get_name(email_text)
-        date = get_date(email_text)
-        month_number = int(date.split("/")[0])
-        temp_month = expenses_bank.months[month_number-1]
-        if(name == 'Zaki Ansari' and amount == '-30.00'):
-            expenses_bank.add_expense_to_category("Phone Bill", date, f"Zelle Payment to {name.split(' ')[0]}", amount, temp_month)
-            add_expense_to_sheet(date, name, amount, "Phone Bill", month_number)
-        elif(name == 'Jawad Ansari' or name == 'Zaki Ansari'):
-            expenses_bank.add_expense_to_category("Personal Expenses", date, f"Zelle Payment to {name.split(' ')[0]}", amount, temp_month)
-            add_expense_to_sheet(date, name, amount, "Personal Expenses", month_number)
-        else:
-            expenses_bank.add_expense_to_category("807 Wifi", date, f"Zelle Payment to {name}", amount, temp_month)
-            add_expense_to_sheet(date, name, amount, "807 Wifi", month_number)
-    else:
-        return False'''
     name = get_name(email_text)
     amount = get_amount(email_text)
     date = get_date(email_text)
     category = get_category(name)
+    add_expense_to_sheet(date, name, amount, category)
 
 
 
