@@ -124,17 +124,12 @@ def get_category(name):
                 """, (predicted_category, name)
             )
             conn.commit()
+            print("USED BACKUP DATABASE")
             
             # retrain the model
             #retrain_model()
         else:
             predicted_category = "Other"
-            cursor.execute(""" 
-                INSERT INTO corrections (merchant_category, merchant)
-                VALUES (?, ?) 
-                """, (predicted_category, name)
-            )
-            conn.commit()
         conn.close()
 
     return predicted_category
