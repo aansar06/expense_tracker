@@ -82,10 +82,9 @@ def get_date(email_text):
     date = f"{month_number}/{day}/{year}"
 
     return date
-
+# loading the trained model
+model = joblib.load("merchant_model.pkl")
 def get_category(name):
-    # loading the trained model
-    model = joblib.load("merchant_model.pkl")
 
     # preprocessing the name
     name = name.lower().strip()
