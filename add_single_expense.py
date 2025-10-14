@@ -7,9 +7,12 @@ import subprocess
 from datetime import datetime
 
 
-def retrain_model():
+"""def retrain_model():
     subprocess.run(["python", "retraining_model.py"], check=True)
-    print("✅ Model retrained with new data")
+    print("✅ Model retrained with new data")"""
+
+# loading the trained model
+model = joblib.load("merchant_model.pkl")
 
 def get_wks(date_str):
     sa = gspread.service_account(filename="credentials/service_account.json")
@@ -82,8 +85,7 @@ def get_date(email_text):
     date = f"{month_number}/{day}/{year}"
 
     return date
-# loading the trained model
-model = joblib.load("merchant_model.pkl")
+
 def get_category(name):
 
     # preprocessing the name
@@ -97,41 +99,41 @@ def get_category(name):
     proba = model.predict_proba(X_new)
     confidence = proba.max() 
 
-    if(confidence < 0.6):
-        # check if name is in backup database
-        conn = sqlite3.connect('intro.db')
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT merchant_category
-            FROM backup_data
-            WHERE LOWER(?) LIKE '%' || LOWER(merchant) || '%' LIMIT 1 """, (name,)
-        )
+    # if(confidence < 0.6):
+    #     # check if name is in backup database
+    #     conn = sqlite3.connect('intro.db')
+    #     cursor = conn.cursor()
+    #     cursor.execute("""
+    #         SELECT merchant_category
+    #         FROM backup_data
+    #         WHERE LOWER(?) LIKE '%' || LOWER(merchant) || '%' LIMIT 1 """, (name,)
+    #     )
 
-        # get the name of the category
-        row = cursor.fetchone()
-        if row:
-            predicted_category = row[0]
-            cursor.execute(""" 
-                INSERT INTO training_dataset (merchant_category, merchant)
-                VALUES (?, ?) 
-                """, (predicted_category, name)
-            )
-            cursor.execute(""" 
-                INSERT INTO training_dataset (merchant_category, merchant)
-                VALUES (?, ?) 
-                """, (predicted_category, name)
-            )
-            conn.commit()
-            conn.close()
-            # retrain the model
-            retrain_model()
-        else:
-            predicted_category = "Other"
-            cursor.execute(""" 
-                INSERT INTO corrections (merchant_category, merchant)
-                VALUES (?, ?) 
-                """, (predicted_category, name)
-            )
+    #     # get the name of the category
+    #     row = cursor.fetchone()
+    #     if row:
+    #         predicted_category = row[0]
+    #         cursor.execute(""" 
+    #             INSERT INTO training_dataset (merchant_category, merchant)
+    #             VALUES (?, ?) 
+    #             """, (predicted_category, name)
+    #         )
+    #         cursor.execute(""" 
+    #             INSERT INTO training_dataset (merchant_category, merchant)
+    #             VALUES (?, ?) 
+    #             """, (predicted_category, name)
+    #         )
+    #         conn.commit()
+    #         conn.close()
+    #         # retrain the model
+    #         #retrain_model()
+    #     else:
+    #         predicted_category = "Other"
+    #         cursor.execute(""" 
+    #             INSERT INTO corrections (merchant_category, merchant)
+    #             VALUES (?, ?) 
+    #             """, (predicted_category, name)
+    #         )
 
     return predicted_category
 
