@@ -1,6 +1,5 @@
 import expenses_bank
 import gspread
-import time
 import joblib
 import pandas as pd
 import sqlite3
