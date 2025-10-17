@@ -131,7 +131,7 @@ def get_category(name):
         else:
             predicted_category = "Other"
         conn.close()
-
+    
     return predicted_category
 
 
