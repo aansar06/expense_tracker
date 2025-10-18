@@ -5,11 +5,13 @@ import pandas as pd
 import sqlite3
 import subprocess
 from datetime import datetime
+import re
 
 
-"""def retrain_model():
+def retrain_model():
+    print("♻️  Retraining model (every 6 insertions)...")
     subprocess.run(["python", "retraining_model.py"], check=True)
-    print("✅ Model retrained with new data")"""
+    print("✅ Model retrained!")
 
 # loading the trained model
 model = joblib.load("merchant_model.pkl")
@@ -75,8 +77,12 @@ def get_date(email_text):
 
     # getting month, day, year
     month = email_text[start_index:start_index+3]
-    day = email_text[start_index+4:start_index+6]
-    year = email_text[start_index+8:start_index+12]
+    day = email_text[start_index+4:start_index+6].replace(',', '')
+    if(len(day) == 1):
+        year = email_text[start_index+7:start_index+11]
+    else:
+        year = email_text[start_index+8:start_index+12]
+    day = day.zfill(2)  # padding day with leading zero if needed
     
     # using dictionary to get month number: O(1) ammortized time
     month_number = expenses_bank.months_map[month]
@@ -90,6 +96,7 @@ def get_category(name):
 
     # preprocessing the name
     name = name.lower().strip()
+    name = re.sub(r'\.com|\.net|\.org|\.co|\.in|\.ca|\.uk', '', name)
 
     # predicting the category
     X_new = pd.Series([name])
@@ -98,11 +105,13 @@ def get_category(name):
     # getting confidence
     proba = model.predict_proba(X_new)
     confidence = proba.max() 
-
+    print(confidence)
     if(confidence < 0.6):
         # check if name is in backup database
+        print("confidence is less than 60%")
         conn = sqlite3.connect('intro.db')
         cursor = conn.cursor()
+        # checks if merchant in backup database is a substring of the name dervied from email
         cursor.execute("""
             SELECT merchant_category
             FROM backup_data
@@ -125,13 +134,26 @@ def get_category(name):
             )
             conn.commit()
             print("USED BACKUP DATABASE")
+            print("inserted new data into training dataset")
+
+            # ✅ Check how many rows exist in training_dataset
+            cursor.execute("SELECT COUNT(*) FROM training_dataset")
+            count = cursor.fetchone()[0]
+            print(f"training_dataset row count: {count}")
+
+            # ✅ Retrain every 6 insertions
+            if count % 6 == 0:
+                print("♻️  Retraining model (every 6 insertions)...")
+                subprocess.run(["python", "retraining_model.py"], check=True)
+                print("✅ Model retrained!")
             
-            # retrain the model
-            #retrain_model()
+            
         else:
             predicted_category = "Other"
+            print("data not found in backup database, assigned to Other category")
         conn.close()
-    
+    else:
+        print("confidence is greater than 60%")
     return predicted_category
 
 
@@ -176,7 +198,11 @@ def parse_email(email_text):
     date = get_date(email_text)
     category = get_category(name)
     add_expense_to_sheet(date, name, amount, category)
+    print(f"{name}, ${amount}, {date}, {category}")
 
-
+if __name__ == "__main__":
+    # Example email text
+    email_text = "Transaction alert You made a debit card transaction of $6.69 with TST* DOG HAUS BIERGA Account ending in (...0364) Made on Sep 30, 2025 at 2:13 AM ET Description TST* DOG HAUS BIERGA Amount $6.69 You"
+    parse_email(email_text)
 
     

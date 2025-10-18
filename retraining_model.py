@@ -25,7 +25,12 @@ print(df['merchant_category'].value_counts())
 # -------------------------------
 # Step 2: Preprocess the data
 # -------------------------------
-df['merchant'] = df['merchant'].str.lower().str.strip()
+df['merchant'] = (
+    df['merchant']
+      .str.lower()
+      .str.strip()
+      .str.replace(r'\.com|\.net|\.org|\.co|\.in|\.ca|\.uk', '', regex=True)
+)
 
 X = df['merchant']           # input features
 y = df['merchant_category']  # labels
