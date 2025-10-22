@@ -198,6 +198,7 @@ def add_expense_to_sheet(date, name, amount, category):
         wks.insert_row([date, name, amount], last_row + 2)
         print(f"🆕 Created new category '{category}' and added expense below it.")
     
+    # Update the total for the category
     for i, cell_value in enumerate(category_col[found_row:], start=found_row+1):
         if not cell_value.strip():     
             # Update the cell that's empty with the word "Total"
@@ -209,6 +210,12 @@ def add_expense_to_sheet(date, name, amount, category):
         
         # update the total for this specific category in which expense was added
         update_category_total(i, amount, wks)
+
+    # Update overall income or expenses
+    if amount < 0:
+        update_expenses(amount, wks)
+    else:
+        update_income(amount, wks)
 
 
 def update_category_total(found_row, amount, wks):
@@ -222,12 +229,23 @@ def update_category_total(found_row, amount, wks):
     # formats the total as $xx if positive, or -$xx if negative
     wks.update_cell(found_row, 3, "${:,.2f}".format(new_total).replace("$-", "-$"))
 
+def update_income(amount, wks):
+    current_income = wks.cell(2, 2).value or "0"
+    new_income = float(current_income.replace("$", "").replace(",", "")) + amount
+    wks.update_cell(2, 2, "${:,.2f}".format(new_income))
+
+def update_expenses(amount, wks):
+    current_expenses = wks.cell(3, 2).value or "0"
+    new_expenses = float(current_expenses.replace("$", "").replace(",", "")) + amount
+    wks.update_cell(3, 2, "${:,.2f}".format(new_expenses))
+
 def parse_email(email_text):
     name = get_name(email_text)
     amount = get_amount(email_text)
     date = get_date(email_text)
     category = get_category(name)
     add_expense_to_sheet(date, name, amount, category)
+    
     print(f"Added the following expense to the sheet: {name}, ${amount}, {date}, {category}")
 
 if __name__ == "__main__":
