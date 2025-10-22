@@ -230,14 +230,24 @@ def update_category_total(found_row, amount, wks):
     wks.update_cell(found_row, 3, "${:,.2f}".format(new_total).replace("$-", "-$"))
 
 def update_income(amount, wks):
+    # get the current income of the month
     current_income = wks.cell(2, 2).value or "0"
+
+    # update the income by adding the amount to the current income
     new_income = float(current_income.replace("$", "").replace(",", "")) + amount
+
+    # formats the income as $xx
     wks.update_cell(2, 2, "${:,.2f}".format(new_income))
 
 def update_expenses(amount, wks):
+    # get the current total expenses of the month
     current_expenses = wks.cell(3, 2).value or "0"
+
+    # update the total expenses by adding the amount to the current expenses
     new_expenses = float(current_expenses.replace("$", "").replace(",", "")) + amount
-    wks.update_cell(3, 2, "${:,.2f}".format(new_expenses))
+
+    # formats the expenses as -$xx
+    wks.update_cell(3, 2, "${:,.2f}".format(new_expenses).replace("$-", "-$"))
 
 def parse_email(email_text):
     name = get_name(email_text)
