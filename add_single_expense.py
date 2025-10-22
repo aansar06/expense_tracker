@@ -43,7 +43,14 @@ def get_amount(email_text):
         end_ind += 1 # end_ind is the index of the last character after the amount
 
     # slicing the string to get the amount
-    return email_text[start_ind:end_ind]
+    amount = email_text[start_ind:end_ind]
+
+    #converting amount to float and negative value for expense
+    if("You made" in email_text):
+        print("Email indicates an expense")
+        amount = float(amount) * -1
+    
+    return amount
 
     
 
@@ -198,7 +205,7 @@ def parse_email(email_text):
     date = get_date(email_text)
     category = get_category(name)
     add_expense_to_sheet(date, name, amount, category)
-    print(f"{name}, ${amount}, {date}, {category}")
+    print(f"Added the following expense to the sheet: {name}, ${amount}, {date}, {category}")
 
 if __name__ == "__main__":
     # Example email text
