@@ -197,8 +197,31 @@ def add_expense_to_sheet(date, name, amount, category):
         wks.update_cell(last_row + 1, 1, word_to_search)
         wks.insert_row([date, name, amount], last_row + 2)
         print(f"🆕 Created new category '{category}' and added expense below it.")
+    
+    for i, cell_value in enumerate(category_col[found_row:], start=found_row+1):
+        if not cell_value.strip():     
+            # Update the cell that's empty with the word "Total"
+            wks.update_cell(i, 1, "Total")
+            break
+        elif cell_value.strip() == "Total":
+            # the cell contains "Total", so we break the loop to add the total in this row
+            break
+        
+        # update the total for this specific category in which expense was added
+        update_category_total(i, amount, wks)
 
-            
+
+def update_category_total(found_row, amount, wks):
+
+    # get the current total from column 3 of the found_row
+    current_total = wks.cell(found_row, 3).value or "0"
+
+    # update the total by adding the amount of the expense to the current total
+    new_total = float(current_total.replace("$", "").replace(",", "")) + amount
+
+    # formats the total as $xx if positive, or -$xx if negative
+    wks.update_cell(found_row, 3, "${:,.2f}".format(new_total).replace("$-", "-$"))
+
 def parse_email(email_text):
     name = get_name(email_text)
     amount = get_amount(email_text)
