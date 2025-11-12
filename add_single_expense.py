@@ -62,11 +62,25 @@ def get_name(email_text):
     Overall O(1+m+m) = O(m) time complexity where m is the length of the name
 
     '''
-    # start_ind is the index of the first character of the name
-    start_ind_n = email_text.find("with ")+5
-    # end_ind is the index of the last character after the name
-    end_ind_n = email_text.find("Account", start_ind_n)
-    # slicing the string to get the name
+
+    if(email_text.startswith("Zelle") and "sent you" in email_text):
+        # getting the name of sender
+        name = email_text[email_text.find("payment ")+8:email_text.find("sent")]
+
+        # getting the description
+        start = email_text.find("Memo ")+5 # start index of the description
+        description = email_text[start:email_text.find(name, start)] # slicing the string to get the description
+        return f"{name}: {description}"
+        
+    elif(email_text.startswith("Zelle") and "you sent" in email_text):
+        print("Email indicates an income")
+    else:
+
+        # start_ind is the index of the first character of the name
+        start_ind_n = email_text.find("with ")+5
+        # end_ind is the index of the last character after the name
+        end_ind_n = email_text.find("Account", start_ind_n)
+        # slicing the string to get the name
     return email_text[start_ind_n:end_ind_n]
 
 def get_date(email_text):
