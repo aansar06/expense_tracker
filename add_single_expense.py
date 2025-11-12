@@ -47,8 +47,11 @@ def get_amount(email_text):
 
     #converting amount to float and negative value for expense
     if("You made" in email_text):
-        print("Email indicates an expense")
+        print("Transaction indicates an expense")
         amount = float(amount) * -1
+    elif("sent you" in email_text):
+        print("Transaction indicates a gain")
+        amount = float(amount)
     
     return amount
 
