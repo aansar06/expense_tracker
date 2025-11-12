@@ -255,7 +255,6 @@ def parse_email(email_text):
     date = get_date(email_text)
     category = get_category(name)
     add_expense_to_sheet(date, name, amount, category)
-    
     print(f"Added the following expense to the sheet: {name}, ${amount}, {date}, {category}")
 
 if __name__ == "__main__":
