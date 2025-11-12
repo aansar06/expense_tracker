@@ -94,7 +94,10 @@ def get_date(email_text):
 
     '''
     # start_index is the index of the first character of the month
-    start_index = email_text.find("Made on ")+8
+    if(email_text.startswith("Zelle")):
+        start_index = email_text.find("Sent on ")+3
+    else:
+        start_index = email_text.find("Made on ")+8
 
     # getting month, day, year
     month = email_text[start_index:start_index+3]
