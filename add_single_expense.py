@@ -76,7 +76,11 @@ def get_name(email_text):
         return f"{name}: {description}"
         
     elif(email_text.startswith("Zelle") and "you sent" in email_text):
-        print("Email indicates an income")
+        name = email_text[email_text.find("to ")+3:email_text.find("Here")]
+        start = email_text.find("Memo ")+5 # start index of the description
+        description = email_text[start:email_text.find(name, start)] # slicing the string to get the description
+        return f"{name}: {description}"
+
     else:
 
         # start_ind is the index of the first character of the name
