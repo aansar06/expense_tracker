@@ -277,7 +277,11 @@ def parse_email(email_text):
     name = get_name(email_text)
     amount = get_amount(email_text)
     date = get_date(email_text)
-    category = get_category(name)
+    if "sent you" in email_text:
+        print("This is an incoming transaction. No expense to add.")
+        category = "Income"
+    else:
+        category = get_category(name)
     add_expense_to_sheet(date, name, amount, category)
     print(f"Added the following expense to the sheet: {name}, ${amount}, {date}, {category}")
 
