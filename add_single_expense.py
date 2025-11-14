@@ -46,7 +46,7 @@ def get_amount(email_text):
     amount = email_text[start_ind:end_ind]
 
     #converting amount to float and negative value for expense
-    if("You made" in email_text):
+    if("You made" in email_text or "You sent" in email_text):
         print("Transaction indicates an expense")
         amount = float(amount) * -1
     elif("sent you" in email_text):
@@ -243,7 +243,7 @@ def add_expense_to_sheet(date, name, amount, category):
         update_category_total(i, amount, wks)
 
     # Update overall income or expenses
-    if float(amount )< 0:
+    if float(amount)< 0:
         update_expenses(amount, wks)
     else:
         update_income(amount, wks)
