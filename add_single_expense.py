@@ -182,6 +182,13 @@ def get_category(name):
         else:
             predicted_category = "Other"
             print("data not found in backup database, assigned to Other category")
+            print("inserting data into corrections table for manual review")
+            cursor.execute(""" 
+                INSERT INTO corrections (merchant_category, merchant)
+                VALUES (?, ?) 
+                """, (predicted_category, name)
+            )
+            conn.commit()
         conn.close()
     else:
         print("confidence is greater than 60%")

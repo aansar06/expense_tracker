@@ -12,6 +12,10 @@
 -- ('flexibility', 'yoga'),
 -- ('flexibility', 'stretching') ;
 
-SELECT * FROM backup_data LIMIT 25;
+-- SELECT * FROM backup_data LIMIT 25;
 
 -- DROP TABLE training;
+-- INSERT INTO corrections (merchant_category, merchant)
+
+DELETE FROM corrections WHERE merchant='COSTCO' = 1;
+SELECT * FROM corrections;
