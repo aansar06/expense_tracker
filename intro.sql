@@ -17,5 +17,4 @@
 -- DROP TABLE training;
 -- INSERT INTO corrections (merchant_category, merchant)
 
-DELETE FROM corrections WHERE merchant='COSTCO' = 1;
 SELECT * FROM corrections;
