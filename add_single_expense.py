@@ -6,6 +6,8 @@ import sqlite3
 import subprocess
 from datetime import datetime
 import re
+import os
+import json
 
 
 def retrain_model():
@@ -17,7 +19,8 @@ def retrain_model():
 model = joblib.load("merchant_model.pkl")
 
 def get_wks(date_str):
-    sa = gspread.service_account(filename="credentials/service_account.json")
+    creds_dict = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
+    sa = gspread.service_account_from_dict(creds_dict)
     sh = sa.open("Personal Finances(2024-25)")
     dt = datetime.strptime(date_str, "%m/%d/%Y")
     month_name = dt.strftime("%B")

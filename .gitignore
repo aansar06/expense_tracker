@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# Database files (only if you don't want to track them)
+*.db
+
+# Local credentials (never commit keys!)
+credentials/
+*.json
+
+# Model files (optional)
+*.pkl
+
+# Logs
+*.log
+
+credentials/
+.env
