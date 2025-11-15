@@ -22,8 +22,16 @@ credentials/
 credentials/
 .env
 
+# csv files containg datasets
+training_dataset.csv
+backup_dataset.csv
+corrections.csv
+
+# helper files to test the ML model
 test_train_model.py
 update_transactionsDataset_csv.py
-training_dataset.csv
+
+# sql file
 intro.sql
+
 expenses_bank.py
