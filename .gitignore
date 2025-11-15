@@ -21,3 +21,10 @@ credentials/
 
 credentials/
 .env
+
+test_train_model.py
+update_transactionsDataset_csv.py
+training_dataset.csv
+intro.sql
+expenses_bank.py
+chase_sem1.csv

@@ -1,4 +1,3 @@
-import expenses_bank
 import gspread
 import joblib
 import pandas as pd
@@ -9,6 +8,20 @@ import re
 import os
 import json
 
+months_map = {
+    "Jan": "01",
+    "Feb": "02",
+    "Mar": "03",
+    "Apr": "04",
+    "May": "05",
+    "Jun": "06",
+    "Jul": "07",
+    "Aug": "08",
+    "Sep": "09",
+    "Oct": "10",
+    "Nov": "11",
+    "Dec": "12"
+}
 
 def retrain_model():
     print("♻️  Retraining model (every 6 insertions)...")
@@ -119,7 +132,7 @@ def get_date(email_text):
     day = day.zfill(2)  # padding day with leading zero if needed
     
     # using dictionary to get month number: O(1) ammortized time
-    month_number = expenses_bank.months_map[month]
+    month_number = months_map[month]
 
     # formatting date as MM/DD/YYYY
     date = f"{month_number}/{day}/{year}"
