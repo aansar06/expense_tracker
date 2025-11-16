@@ -252,8 +252,9 @@ def add_expense_to_sheet(date, name, amount, category):
     total_row = None
 
     # 1. Scan rows looking for blank or "Total"
-    for i, cell_value in enumerate(category_col[found_row:], start=found_row+1):
-        
+    for i, cell_value in enumerate(category_col[found_row:], start=base_row):
+        if i <= found_row:
+            continue  # skip rows before the found category
         # Case A: "Total" already exists
         if cell_value.strip() == "Total":
             total_row = i
@@ -261,7 +262,7 @@ def add_expense_to_sheet(date, name, amount, category):
 
     # Case B: No "Total" row exists → add "Total" at the end
     if total_row is None:
-        total_row = len(category_col) + 8    # 8 = offset because you start at row 8
+        total_row = len(category_col) + base_row
         wks.update_cell(total_row, 1, "Total")
 
     # 3. Now update the total value in the same row
