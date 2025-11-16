@@ -264,6 +264,8 @@ def add_expense_to_sheet(date, name, amount, category):
     if total_row is None:
         total_row = len(category_col) + base_row
         wks.update_cell(total_row, 1, "Total")
+        print("no total row found, adding one at the end")
+    
 
     # 3. Now update the total value in the same row
     update_category_total(total_row, amount, wks)
