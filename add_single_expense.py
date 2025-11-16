@@ -257,7 +257,7 @@ def add_expense_to_sheet(date, name, amount, category):
             break
         
         # update the total for this specific category in which expense was added
-        update_category_total(i, amount, wks)
+    update_category_total(i, amount, wks)
 
     # Update overall income or expenses
     if float(amount)< 0:
