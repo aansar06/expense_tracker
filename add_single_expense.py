@@ -156,7 +156,7 @@ def get_category(name):
     if(confidence < 0.6):
         # check if name is in backup database
         print("confidence is less than 60%")
-        conn = sqlite3.connect('intro.db')
+        conn = sqlite3.connect('transactions.db')
         cursor = conn.cursor()
         # checks if merchant in backup database is a substring of the name dervied from email
         cursor.execute("""
