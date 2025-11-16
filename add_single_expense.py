@@ -308,9 +308,4 @@ def parse_email(email_text):
     add_expense_to_sheet(date, name, amount, category)
     print(f"Added the following expense to the sheet: {name}, ${amount}, {date}, {category}")
 
-if __name__ == "__main__":
-    # Example email text
-    email_text = "Transaction alert You made a debit card transaction of $6.69 with TST* DOG HAUS BIERGA Account ending in (...0364) Made on Sep 30, 2025 at 2:13 AM ET Description TST* DOG HAUS BIERGA Amount $6.69 You"
-    parse_email(email_text)
-
-    
+    return True
