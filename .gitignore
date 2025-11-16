@@ -10,9 +10,6 @@ venv/
 credentials/
 *.json
 
-# Model files (optional)
-*.pkl
-
 # Logs
 *.log
 
