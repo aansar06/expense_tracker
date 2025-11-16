@@ -245,19 +245,28 @@ def add_expense_to_sheet(date, name, amount, category):
         wks.insert_row([date, name, amount], last_row + 2)
         print(f"🆕 Created new category '{category}' and added expense below it.")
     
-    # Update the total for the category
-    category_col = wks.col_values(1)[7:]  # refresh the category column after insertion
+    # Refresh after insertion
+    category_col = wks.col_values(1)[7:]
+
+    # Track where we will write "Total"
+    total_row = None
+
+    # 1. Scan rows looking for blank or "Total"
     for i, cell_value in enumerate(category_col[found_row:], start=found_row+1):
-        if not cell_value.strip():     
-            # Update the cell that's empty with the word "Total"
-            wks.update_cell(i, 1, "Total")
-            break
-        elif cell_value.strip() == "Total":
-            # the cell contains "Total", so we break the loop to add the total in this row
-            break
         
-        # update the total for this specific category in which expense was added
-    update_category_total(i, amount, wks)
+        # Case A: "Total" already exists
+        if cell_value.strip() == "Total":
+            total_row = i
+            break
+
+    # Case B: No "Total" row exists → add "Total" at the end
+    if total_row is None:
+        total_row = len(category_col) + 8    # 8 = offset because you start at row 8
+        wks.update_cell(total_row, 1, "Total")
+
+    # 3. Now update the total value in the same row
+    update_category_total(total_row, amount, wks)
+
 
     # Update overall income or expenses
     if float(amount)< 0:
