@@ -246,6 +246,7 @@ def add_expense_to_sheet(date, name, amount, category):
         print(f"🆕 Created new category '{category}' and added expense below it.")
     
     # Update the total for the category
+    category_col = wks.col_values(1)[7:]  # refresh the category column after insertion
     for i, cell_value in enumerate(category_col[found_row:], start=found_row+1):
         if not cell_value.strip():     
             # Update the cell that's empty with the word "Total"
