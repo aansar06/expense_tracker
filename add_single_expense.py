@@ -257,7 +257,7 @@ def add_expense_to_sheet(date, name, amount, category):
         
         # Case A: "Total" already exists
         if cell_value.strip() == 'Total':
-            total_row = i
+            total_row = found_row-8 + i
             break
 
     # Case B: No "Total" row exists → add "Total" at the end
@@ -282,12 +282,15 @@ def update_category_total(found_row, amount, wks):
 
     # get the current total from column 3 of the found_row
     current_total = wks.cell(found_row, 3).value or "0"
+    print(f"Current total before update: {current_total}")
 
     # update the total by adding the amount of the expense to the current total
     new_total = float(current_total.replace("$", "").replace(",", "")) + amount
+    print(f"New total after adding amount {amount}: {new_total}")
 
     # formats the total as $xx if positive, or -$xx if negative
     wks.update_cell(found_row, 3, "${:,.2f}".format(new_total).replace("$-", "-$"))
+    print(f"Updated total at row {found_row}, column 3 to: ${new_total:,.2f}")
 
 def update_income(amount, wks):
     # get the current income of the month
