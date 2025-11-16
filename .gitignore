@@ -19,6 +19,7 @@ credentials/
 # Logs
 *.log
 
+# Environment variables
 credentials/
 .env
 
@@ -35,3 +36,4 @@ update_transactionsDataset_csv.py
 intro.sql
 
 expenses_bank.py
+.DS_Store
