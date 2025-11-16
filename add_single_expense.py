@@ -253,6 +253,7 @@ def add_expense_to_sheet(date, name, amount, category):
 
     # 1. Scan rows looking for blank or "Total"
     for i, cell_value in enumerate(category_col[found_row-8:], start=base_row):
+        print(f"Scanning row {i}: '{cell_value}'")
         if i <= found_row:
             continue  # skip rows before the found category
         # Case A: "Total" already exists
