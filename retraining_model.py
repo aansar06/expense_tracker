@@ -10,7 +10,7 @@ import joblib
 # -------------------------------
 # Step 1: Load the dataset from SQLite
 # -------------------------------
-conn = sqlite3.connect("intro.db")
+conn = sqlite3.connect("transactions.db")
 
 # assuming your table is called 'training_dataset'
 df = pd.read_sql_query("SELECT merchant, merchant_category FROM training_dataset", conn)
