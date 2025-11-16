@@ -35,5 +35,4 @@ update_transactionsDataset_csv.py
 # sql file
 intro.sql
 
-expenses_bank.py
 .DS_Store
