@@ -34,7 +34,7 @@ model = joblib.load("merchant_model.pkl")
 def get_wks(date_str):
     creds_dict = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
     sa = gspread.service_account_from_dict(creds_dict)
-    sh = sa.open("Personal Finances(2024-25)")
+    sh = sa.open("Personal Finances(2025-26)")
     dt = datetime.strptime(date_str, "%m/%d/%Y")
     month_name = dt.strftime("%B")
     wks = sh.worksheet(month_name.lower())
