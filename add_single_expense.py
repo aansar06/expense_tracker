@@ -111,9 +111,9 @@ def get_date(email_text):
     O(c) time for start_index where c is the number of characters before "Made on "
     O(1) time for month, day, year since they are always at the same place after start_index
       - months_map is a dictionary so getting the month number is O(1) ammortized
-    Overall O(1+c) = O(c) time complexity where m is the number of characters before "Made on "
+    Overall O(1+c) = O(c) time complexity where c is the number of characters before "Made on "
 
-    * Runtime is near O(1) since 'm' is roughly the same in practical cases
+    * Runtime is near O(1) since 'c' is roughly the same in practical cases
 
     '''
     # start_index is the index of the first character of the month
