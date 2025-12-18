@@ -7,6 +7,8 @@ from datetime import datetime
 import re
 import os
 import json
+from db_utils import increment_counter
+
 
 months_map = {
     "Jan": "01",
@@ -199,7 +201,7 @@ def get_category(name):
             # ✅ Retrain every 6 insertions
             print("♻️  Retraining model (every 6 insertions)...")
             print("✅ Model retrained!")
-            increment_retrain_counter()                
+            increment_counter()                
             
             
         else:

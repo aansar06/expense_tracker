@@ -1,29 +1,17 @@
+from db_utils import get_counter, reset_counter
 import subprocess
 
-THRESHOLD = 6
-
-def get_counter():
-    try:
-        with open("retrain_counter.txt", "r") as f:
-            return int(f.read().strip())
-    except FileNotFoundError:
-        return 0
-
-def reset_counter():
-    with open("retrain_counter.txt", "w") as f:
-        f.write("0")
-
-def main():
+def retrain_if_needed():
     count = get_counter()
-    print(f"New insertions since last training: {count}")
-
-    if count >= THRESHOLD:
-        print("Threshold reached. Retraining model...")
+    if count >= 6:
+        print(f"Counter is {count}, retraining model...")
+        # Run your actual ML retraining script
         subprocess.run(["python", "retraining_model.py"], check=True)
+        # Reset counter after retraining
         reset_counter()
-        print("Retraining complete. Counter reset.")
+        print("Retraining complete and counter reset.")
     else:
-        print("Not enough new data. Skipping retraining.")
+        print(f"Counter is {count}, retraining not needed.")
 
 if __name__ == "__main__":
-    main()
+    retrain_if_needed()
