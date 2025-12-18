@@ -23,10 +23,18 @@ months_map = {
     "Dec": "12"
 }
 
-def retrain_model():
-    print("♻️  Retraining model (every 6 insertions)...")
-    subprocess.run(["python", "retraining_model.py"], check=True)
-    print("✅ Model retrained!")
+def increment_retrain_counter():
+    try:
+        with open("retrain_counter.txt", "r") as f:
+            count = int(f.read().strip())
+    except FileNotFoundError:
+        count = 0
+
+    count += 1
+
+    with open("retrain_counter.txt", "w") as f:
+        f.write(str(count))
+
 
 # loading the trained model
 model = joblib.load("merchant_model.pkl")
@@ -189,10 +197,9 @@ def get_category(name):
             print(f"training_dataset row count: {count}")
 
             # ✅ Retrain every 6 insertions
-            if count % 6 == 0:
-                print("♻️  Retraining model (every 6 insertions)...")
-                subprocess.run(["python", "retraining_model.py"], check=True)
-                print("✅ Model retrained!")
+            print("♻️  Retraining model (every 6 insertions)...")
+            print("✅ Model retrained!")
+            increment_retrain_counter()                
             
             
         else:
