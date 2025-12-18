@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
 import os
 import add_single_expense
+from db_utils import init_db
 app = Flask(__name__)
 
+
 EXPECTED = os.environ.get('API_KEY')
+init_db() 
 
 @app.route('/trigger', methods=['POST'])
 def trigger():
