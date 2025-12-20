@@ -2,7 +2,6 @@ import gspread
 import joblib
 import pandas as pd
 import sqlite3
-import subprocess
 from datetime import datetime
 import re
 import os
@@ -25,17 +24,6 @@ months_map = {
     "Dec": "12"
 }
 
-def increment_retrain_counter():
-    try:
-        with open("retrain_counter.txt", "r") as f:
-            count = int(f.read().strip())
-    except FileNotFoundError:
-        count = 0
-
-    count += 1
-
-    with open("retrain_counter.txt", "w") as f:
-        f.write(str(count))
 
 
 # loading the trained model
@@ -198,9 +186,8 @@ def get_category(name):
             count = cursor.fetchone()[0]
             print(f"training_dataset row count: {count}")
 
-            # ✅ Retrain every 6 insertions
-            print("♻️  Retraining model (every 6 insertions)...")
-            print("✅ Model retrained!")
+            # ✅ Increment insertion counter
+            print("♻️  Marked new training data (counter incremented)")
             increment_counter()                
             
             
