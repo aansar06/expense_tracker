@@ -30,3 +30,6 @@ update_transactionsDataset_csv.py
 intro.sql
 
 .DS_Store
+
+# SQLite counter
+counter.db
