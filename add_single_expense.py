@@ -239,6 +239,7 @@ def add_expense_to_sheet(date, name, amount, category):
         last_row = len(category_col) + base_row
         wks.update_cell(last_row + 1, 1, word_to_search)
         wks.insert_row([date, name, amount], last_row + 2)
+        found_row = last_row + 1  # Update found_row to the new category row
         print(f"🆕 Created new category '{category}' and added expense below it.")
     
     # Refresh after insertion
