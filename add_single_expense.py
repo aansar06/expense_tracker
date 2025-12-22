@@ -115,7 +115,7 @@ def get_date(email_text):
 
     '''
     # start_index is the index of the first character of the month
-    if(email_text.startswith("Zelle")):
+    if(email_text.startswith("Zelle") or email_text.startswith("Transfer alert")):
         start_index = email_text.find("Sent on ")+8
     else:
         start_index = email_text.find("Made on ")+8
