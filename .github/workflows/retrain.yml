@@ -24,4 +24,4 @@ jobs:
 
       - name: Run retraining
         run: |
-          python retrain.py
+          python retraining_model.py
