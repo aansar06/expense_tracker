@@ -23,7 +23,8 @@ def trigger():
         email_text = data['email_body']
        
         if("Transfer" not in email_text or "Transaction" not in email_text or "Zelle" not in email_text):
-            print(f"Email does not match expected format: {email_text}")
+            print(f"Email does not match expected format")
+            print(f"Email Text: {email_text}")
             return jsonify({"message": "Email does not match expected format", "status": 400}), 400
         
         # Call your main program logic with the email text if needed
