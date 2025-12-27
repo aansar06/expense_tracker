@@ -94,6 +94,10 @@ def get_name(email_text):
         start = email_text.find("Memo ")+5 # start index of the description
         description = email_text[start:email_text.find(name, start)] # slicing the string to get the description
         return f"{name}: {description}"
+    elif(email_text.startswith("Transfer alert")):
+        # getting the name of recipient
+        name = email_text[email_text.find("to ")+3:email_text.find("Account")]
+        return name.strip()
 
     else:
 
